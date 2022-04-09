@@ -98,7 +98,7 @@ void mat_mul1(float* u,float* ip,float *op,int size,int qubit_oper){
 
 __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 {
-		for(int j=0;j<4;j++){printf("%f\n",d_u);}
+		for(int j=0;j<4;j++){printf("%f\n",d_u[j]);}
 		int index1,index2;
 		int mask;
 		int i= blockDim.x * blockIdx.x + threadIdx.x;

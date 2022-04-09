@@ -102,13 +102,13 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		int index1,index2;
 		int mask;
 		int i= blockDim.x * blockIdx.x + threadIdx.x;
-		mask = 1<<2;
+		mask = 1<<qubit;
 	    index1 = i;
 		index2 = mask ^i;
-		if(((i >> 2) & 1) == 0)
+		if(((i >> qubit) & 1) == 0)
 		{
-			d_op[index1] = (d_u[0] * d_ip[index1]) + (d_u[1] * d_ip[index2]);
-			d_op[index2] = (d_u[2] * d_ip[index1]) + (d_u[3] * d_ip[index2]);
+			d_op[i] = (d_u[0] * d_ip[i]) + (d_u[1] * d_ip[i+(1<<2)]);
+			d_op[i+(1<<2)] = (d_u[2] * d_ip[i]) + (d_u[3] * d_ip[i+(1<<2)]);
 
 		}
 }

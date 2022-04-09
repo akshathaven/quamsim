@@ -141,9 +141,9 @@ int main(int argc, char *argv[])
 	float *d_u,*d_ip,*d_op;
 	int d_qopr;
 	
-	cudaMalloc((void*)&d_u,4*1*sizeof(float));
-    cudaMalloc((void*)&d_ip,(count-1)*1*sizeof(float));
-    cudaMalloc((void*)&d_op,(count-1)*1*sizeof(float));
+	cudaMalloc((void**)&d_u,4*sizeof(float));
+    cudaMalloc((void**)&d_ip,(count-1)*sizeof(float));
+    cudaMalloc((void**)&d_op,(count-1)*sizeof(float));
 	
 	
 	

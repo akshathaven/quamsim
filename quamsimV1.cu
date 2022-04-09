@@ -141,9 +141,9 @@ int main(int argc, char *argv[])
 	float *d_u,*d_ip,*d_op;
 	int d_qopr;
 	
-	cudaMalloc((void*)&d_u,4*sizeof(float));
-    cudaMalloc((void*)&d_ip,(count-1)*sizeof(float));
-    cudaMalloc((void*)&d_op,(count-1)*sizeof(float));
+	cudaMalloc((void*)&d_u,4*1*sizeof(float));
+    cudaMalloc((void*)&d_ip,(count-1)*1*sizeof(float));
+    cudaMalloc((void*)&d_op,(count-1)*1*sizeof(float));
 	
 	
 	
@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
 	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-	for(int j=0;j<size-1;j++){printf("%.3f\n",op[j]);    }
+	for(int j=0;j<count-1;j++){printf("%.3f\n",op[j]);    }
     fclose(FP);
 }
 

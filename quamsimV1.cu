@@ -12,8 +12,6 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-
-
 FILE *FP;    // to store trace file
 char *input_file;
 int i;
@@ -100,8 +98,11 @@ void mat_mul1(float* u,float* ip,float *op,int size,int qubit_oper){
 
 __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 {
+		
+		int index1,index2;
+		int mask;
 		int i= blockDim.x * blockIdx.x + threadIdx.x;
-		mask = 1<<qubit_oper;
+		mask = 1<<qubit;
 	    index1 = i;
 		index2 = mask ^i;
 		if(((i >> qubit) & 1) == 0)

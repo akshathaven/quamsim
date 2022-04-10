@@ -276,6 +276,9 @@ int main(int argc, char *argv[])
 	
 	cudaMemcpy(ip,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	for(int j=0;j<count-6;j++){printf("%.3f\n",ip[j]);    }
+	cudaFree(d_u);
+	cudaFree(d_op);
+	cudaFree(d_ip);
 	
 	cudaMemcpy(d_u,u2,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
@@ -283,7 +286,7 @@ int main(int argc, char *argv[])
 	
 	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[1]);
 	
-	cudaMemcpy(ip,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
+	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
 	for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }

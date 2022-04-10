@@ -105,12 +105,12 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		mask = 1<<qubit;
 	    index1 = i;
 		index2 = mask ^i;
-		if(((i >> qubit) & 1) == 0)
+		if(((i >> 0) & 1) == 0)
 		{
-			d_op[i] = (d_u[0] * d_ip[i]) + (d_u[1] * d_ip[i+(1<<qubit)]);
-			d_op[i+(1<<qubit)] = (d_u[2] * d_ip[i]) + (d_u[3] * d_ip[i+(1<<qubit)]);
-			printf("%f\n",d_op[i]);
-			printf("%f\n",d_op[i+(1<<0)]);
+			d_op[i] = (d_u[0] * d_ip[i]) + (d_u[1] * d_ip[i+(1<<0)]);
+			d_op[i+(1<<0)] = (d_u[2] * d_ip[i]) + (d_u[3] * d_ip[i+(1<<0)]);
+			//printf("%f\n",d_op[i]);
+			//printf("%f\n",d_op[i+(1<<0)]);
 			
 
 		}
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
 	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-	for(int j=0;j<6;j++){printf("%d\n",qubit[j]);    }
+	for(int j=0;j<count-6;j++){printf("%d\n",op[j]);    }
     fclose(FP);
 }
 

@@ -156,11 +156,13 @@ int main(int argc, char *argv[])
 	int d_qopr;
 	
 	cudaMalloc((void**)&d_u,4*sizeof(float));
-    cudaMalloc((void**)&d_ip,(count-1)*sizeof(float));
-    cudaMalloc((void**)&d_op,(count-1)*sizeof(float));
+    	cudaMalloc((void**)&d_ip,(count-1)*sizeof(float));
+    	cudaMalloc((void**)&d_op,(count-1)*sizeof(float));
 	
-	
-	
+	int block_size = 256;
+	 int gird_size = int(count/block_size);
+	dim3 grid(grid_size,gird_size);
+	dim3 threads(block_size, block_size);
 	
 	
 	vector_array=(float**) malloc(sizeof(float*)*count-1);
@@ -231,7 +233,7 @@ int main(int argc, char *argv[])
 	 
 	gettimeofday (&begin, NULL);
           
-	mat_mul<<<grid,1>>>(d_u,d_ip,d_op,qubit_oper);
+	mat_mul<<<grid,threads>>>(d_u,d_ip,d_op,qubit_oper);
     gettimeofday (&end, NULL);
 	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	

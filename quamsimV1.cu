@@ -109,7 +109,8 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		{
 			d_op[i] = (d_u[0] * d_ip[i]) + (d_u[1] * d_ip[i+(1<<2)]);
 			d_op[i+(1<<2)] = (d_u[2] * d_ip[i]) + (d_u[3] * d_ip[i+(1<<2)]);
-			printf("%f\n",d_ip[i]);
+			printf("%f\n",d_op[i]);
+			printf("%f\n",d_op[i+(1<<2)]);
 			
 
 		}

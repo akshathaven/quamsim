@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
 		//printf("\n");
 		for(int a=0;a<2;a++){
 		    for(int b=0;b<2;b++){
-		        col1[a][b]=col2[(a*2)+b];		    }
+		        col1[a][b]=col2[(a*2)+b];		   }
 		}
 		
 

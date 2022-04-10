@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
 	 
 	gettimeofday (&begin, NULL);
           
-	mat_mul<<<grid, 16>>>(d_u,d_ip,d_op,qubit[0]);
+	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[0]);
     gettimeofday (&end, NULL);
 	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	

@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 	
 	int block_size = 256;
 	 int grid_size = int(count/block_size);
-	dim3 grid(grid_size,gird_size);
+	dim3 grid(grid_size,grid_size);
 	dim3 threads(block_size, block_size);
 	
 	

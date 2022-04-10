@@ -162,8 +162,8 @@ int main(int argc, char *argv[])
 	
 	int block_size = 256;
 	 int grid_size = int(count/block_size);
-	//dim3 grid(grid_size,grid_size);
-	//dim3 threads(block_size, block_size);
+	dim3 grid(grid_size,grid_size);
+	dim3 threads(block_size, block_size);
 	
 	
 	vector_array=(float**) malloc(sizeof(float*)*count-1);
@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
 	}
 	
 	
-	dim3 grid(1,2);
+	//dim3 grid(1,2);
 	
 	 cudaMemcpy(d_u,u,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,ip,(count-1)*sizeof(float),cudaMemcpyHostToDevice);
@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
 	 
 	gettimeofday (&begin, NULL);
           
-	mat_mul<<<grid, 1>>>(d_u,d_ip,d_op,qubit_oper);
+	mat_mul<<<grid, threads>>>(d_u,d_ip,d_op,qubit_oper);
     gettimeofday (&end, NULL);
 	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	

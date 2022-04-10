@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
     	cudaMalloc((void**)&d_op,(count-1)*sizeof(float));
 	
 	int block_size = 256;
-	 int gird_size = int(count/block_size);
+	 int grid_size = int(count/block_size);
 	dim3 grid(grid_size,gird_size);
 	dim3 threads(block_size, block_size);
 	
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 	}
 	
 	
-	dim3 grid(1,2);
+	//dim3 grid(1,2);
 	
 	 cudaMemcpy(d_u,u,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,ip,(count-1)*sizeof(float),cudaMemcpyHostToDevice);

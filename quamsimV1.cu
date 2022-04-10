@@ -262,9 +262,9 @@ int main(int argc, char *argv[])
 	}
 	
 	
-	dim3 grid(1,256);
+	dim3 grid(2,256);
 	
-	 cudaMemcpy(d_u,u2,4*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
 	 
@@ -275,6 +275,8 @@ int main(int argc, char *argv[])
     gettimeofday (&end, NULL);
 	
 	cudaMemcpy(ip,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
+	for(int j=0;j<count-6;j++){printf("%.3f\n",ip[j]);    }
+	
 	cudaMemcpy(d_u,u2,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
 	cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);

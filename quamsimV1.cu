@@ -273,7 +273,15 @@ int main(int argc, char *argv[])
           
 	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[0]);
     gettimeofday (&end, NULL);
-	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
+	
+	cudaMemcpy(ip,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
+	cudaMemcpy(d_u,u2,4*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
+	cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
+	
+	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[1]);
+	
+	cudaMemcpy(ip,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
 	for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }

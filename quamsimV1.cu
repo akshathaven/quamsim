@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     int count=0;
     //int p=0;
 	while(fscanf(FP, "%f", &num1) != EOF){
-    if(p>3)
+    if(p>23)
         {
         count++;}
     p++;
@@ -167,17 +167,32 @@ int main(int argc, char *argv[])
 	
 	
 	vector_array=(float**) malloc(sizeof(float*)*count-1);
-	ip= (float*) malloc(sizeof(float)*count-1);
-	op=(float*) malloc(sizeof(float)*count-1);
+	ip= (float*) malloc(sizeof(float)*count-6);
+	op=(float*) malloc(sizeof(float)*count-6);
 	float **col1;
-	float *u;
+	float *u1,*u2,*u3,*u4,*u5,*u6;
+	int *qubit;
 	col1=(float**)malloc(sizeof(float*)*2);
-	u=(float*)malloc(sizeof(float)*4);
+	u1=(float*)malloc(sizeof(float)*4);
+	u2=(float*)malloc(sizeof(float)*4);
+	u3=(float*)malloc(sizeof(float)*4);
+	u4=(float*)malloc(sizeof(float)*4);
+	u5=(float*)malloc(sizeof(float)*4);
+	u6=(float*)malloc(sizeof(float)*4);
+	qubit=(int*)malloc(sizeof(int)*6);
+	int a=0;
+	int b=0;
+	int c=0;
+	int d=0;
+	int e=0;
+	int f=0;
+	int g=0;
+	
 	for(i=0;i<2;i++){
         col1[i]=(float*) malloc(sizeof(float)*2);
 	}
     //printf("%d,",size);
-    int test_size=count-1;
+    int test_size=count-6;
 	for(i=0;i<count-1;i++){
         vector_array[i]=(float*) malloc(sizeof(float)*1);
         
@@ -194,9 +209,29 @@ int main(int argc, char *argv[])
     {
 		if(i<4){
 		col2[i]=num1;
-		u[i]=num1;
+		u1[i]=num1;
 		//printf("%f",col2[i]);
 		//printf("\n");
+		}
+		if(i>3 && i<8){
+		u2[a]=num1;
+		a++;
+		}
+		if(i>7 && i<12){
+		u3[b]=num1;
+		b++;
+		}
+		if(i>11 && i<16){
+		u4[c]=num1;
+		c++;
+		}
+		if(i>15 && i<20){
+		u5[d]=num1;
+		d++;
+		}
+		if(i>19 && i<24){
+		u6[e]=num1;
+		e++;
 		}
 		//printf("%f",col1[i][c]);
 		//printf("\n");
@@ -208,7 +243,7 @@ int main(int argc, char *argv[])
 
         
 
-		if(i>3 && i<(p-1)){
+		if(i>23 && i<(p-6)){
 
 		    vector_array[l][0]=num1;
 		    ip[l]=num1;
@@ -217,8 +252,10 @@ int main(int argc, char *argv[])
 		}
 
         i++;
-        if(i==p){
+        if(i>p-6){
             qubit_oper =  num1;
+		qubit[g]=num1;
+		g++;
             
 
 		}
@@ -227,14 +264,14 @@ int main(int argc, char *argv[])
 	
 	dim3 grid(1,256);
 	
-	 cudaMemcpy(d_u,u,4*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,ip,(count-1)*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,op,(count-1)*sizeof(float),cudaMemcpyHostToDevice);
 	 
 	 
 	gettimeofday (&begin, NULL);
           
-	mat_mul<<<grid, 16>>>(d_u,d_ip,d_op,qubit_oper);
+	mat_mul<<<grid, 16>>>(d_u,d_ip,d_op,qubit[0]);
     gettimeofday (&end, NULL);
 	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	

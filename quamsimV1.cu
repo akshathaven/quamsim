@@ -120,8 +120,8 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 
 int main(int argc, char *argv[])
 {
-    qubit_circuit = argv[0]; //qubit circuit
-	printf("%d\n",qubit_circuit);
+    //qubit_circuit = argv[0]; //qubit circuit
+	//printf("%d\n",qubit_circuit);
     //scanf("%d",&qubit_circuit);
     //scanf("%d",&qubit_oper);
     //qubit_oper      = argv[1]; //qubit operation

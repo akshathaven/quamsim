@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     //scanf("%d",&qubit_circuit);
     //scanf("%d",&qubit_oper);
     //qubit_oper      = argv[1]; //qubit operation
-    input_file = "input_for_qc7_q0_q2_q3_q4_q5_q6.txt";
+    input_file = argv[1]; // "input_for_qc7_q0_q2_q3_q4_q5_q6.txt";
     //input_1=argv[0];
     FP = fopen(input_file, "r");
     if (FP == NULL)

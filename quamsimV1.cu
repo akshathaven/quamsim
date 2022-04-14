@@ -123,7 +123,10 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 			//for(int q=0;q<1;q++)
 			//{
 			d_op[i]=s1[0]+s2[0];
-			d_op[i+(1<< qubit)] =s1[1]+s2[1];	
+			d_op[i+(1<< qubit)] =s1[1]+s2[1];
+			printf("%.3f\n",d_op[i]);
+			printf("%.3f\n",d_op[i+(1<< qubit)]) ;
+			
 			//}
 			
 			
@@ -378,7 +381,7 @@ int main(int argc, char *argv[])
 	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);*/
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-	for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
+	//for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
     fclose(FP);
 }
 

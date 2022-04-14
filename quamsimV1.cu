@@ -266,6 +266,7 @@ int main(int argc, char *argv[])
 	}
 	int num_frag=(count-6)/64;
 	float *frag_ip;
+	frag_ip=(float*)malloc(sizeof(float)*64);
 	int k=0;
 	for(i=0;i<num_frag;i++)
 	{

@@ -123,7 +123,7 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 			for(int q=0;q<1;q++)
 			{
 			d_op[i]=s1[q]+s2[q];
-			d_op[i+(1<< qubit)] =s1[q+1]+s2[q+1]	
+			d_op[i+(1<< qubit)] =s1[q+1]+s2[q+1];	
 			}
 			
 			

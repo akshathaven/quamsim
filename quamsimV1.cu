@@ -120,11 +120,11 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 				s2[threadIdx.x]=d_u[k]*d_ip[i+(1<< qubit)];
 			}
 			__syncthreads();
-			for(int q=0;q<1;q++)
-			{
-			d_op[i]=s1[q]+s2[q];
-			d_op[i+(1<< qubit)] =s1[q+1]+s2[q+1];	
-			}
+			//for(int q=0;q<1;q++)
+			//{
+			d_op[i]=s1[0]+s2[0];
+			d_op[i+(1<< qubit)] =s1[1]+s2[1];	
+			//}
 			
 			
 			//d_op[i] = (d_u[0] * d_ip[i]) + (d_u[1] * d_ip[i+(1<< qubit)]);

@@ -118,7 +118,6 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 
 
 
-
 int main(int argc, char *argv[])
 {
     //qubit_circuit = argv[0]; //qubit circuit
@@ -160,8 +159,8 @@ int main(int argc, char *argv[])
 	int d_qopr;
 	
 	cudaMalloc((void**)&d_u,4*sizeof(float));
-    	cudaMalloc((void**)&d_ip,32*sizeof(float));
-    	cudaMalloc((void**)&d_op,32*sizeof(float));
+    	cudaMalloc((void**)&d_ip,(count-6)*sizeof(float));
+    	cudaMalloc((void**)&d_op,(count-6)*sizeof(float));
 	
 	int block_size = 256;
 	 int grid_size = int(count/block_size);
@@ -264,41 +263,8 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	int num_frag = (count-6)/32;
-	float *inp;
-	float *onp;
-	int k=0;
-	int n=0;
+	
 	dim3 grid(2,256);
-	
-	for(i=0;i<num_frag;i++)
-	{
-		for(int j=0;j<32;j++)
-		{
-			inp[j]=ip[k];
-			k++;
-		}
-	//cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
-	// cudaMemcpy(d_ip,inp,32*sizeof(float),cudaMemcpyHostToDevice);
-	// cudaMemcpy(d_op,onp,32*sizeof(float),cudaMemcpyHostToDevice);
-		
-		///mat_mul<<<grid, 32>>>(d_u,d_ip,d_op,qubit[0]);
-	//cudaMemcpy(onp,d_op,32*sizeof(float),cudaMemcpyDeviceToHost);
-		for(int h=0;h<32;h++)
-		{
-			//printf("%f\n",inp[h]);
-			//op[n]=inp[h]; 
-			//n++;
-		}
-	}
-	
-	//for(i=0;i<count-6;i++)
-	//{
-		//ip[i]=op[i];
-	//}
-	
-	
-	/*dim3 grid(2,256);
 	
 	 cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
@@ -355,10 +321,12 @@ int main(int argc, char *argv[])
 	
 	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[5]);
 	
-	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);*/
+	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-	//for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
+	for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
     fclose(FP);
 }
+
+
 

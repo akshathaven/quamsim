@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
 	//cudaMemcpy(onp,d_op,32*sizeof(float),cudaMemcpyDeviceToHost);
 		for(int h=0;h<32;h++)
 		{
-			printf("%d\n",inp[h]);
+			//printf("%f\n",inp[h]);
 			//op[n]=inp[h]; 
 			//n++;
 		}

@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 	float **vector_array;
 	float *ip;
 	float *op;
-	float *frag_ip;
+	//float *frag_ip;
 	float *frag_op;
 	
 	float *d_u,*d_ip,*d_op;
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
 		}
 		for(int j=0;j<64;j++)
 		{
-		printf("%f",frag[j]);
+		printf("%f",frag_ip[j]);
 		}
 	
 	}

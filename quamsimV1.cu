@@ -112,12 +112,12 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 			__shared__ float s2[2];
 			
 			for(int j=0;j<3;j=j+2){
-				s1[threadIdx.x]=u[j]*ip[i];
+				s1[threadIdx.x]=d_u[j]*d_ip[i];
 			}
 		__syncthreads();
 			for(int k=1;k<4;k=k+2)
 			{
-				s2[threadIidx.x]=u[k]*ip[i+(1<< qubit)];
+				s2[threadIdx.x]=d_u[k]*d_ip[i+(1<< qubit)];
 			}
 			__syncthreads();
 			for(int q=0;q<1;q++)

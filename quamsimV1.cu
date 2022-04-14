@@ -107,8 +107,28 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		index2 = mask ^i;
 		if(((i >>  qubit) & 1) == 0)
 		{
-			d_op[i] = (d_u[0] * d_ip[i]) + (d_u[1] * d_ip[i+(1<< qubit)]);
-			d_op[i+(1<< qubit)] = (d_u[2] * d_ip[i]) + (d_u[3] * d_ip[i+(1<< qubit)]);
+			
+			__shared__ float s1[2];
+			__shared__ float s2[2];
+			
+			for(int j=0;j<3;j=j+2){
+				s1[threadIdx.x]=u[j]*ip[i];
+			}
+		__syncthreads();
+			for(int k=1;k<4;k=k+2)
+			{
+				s2[threadIidx.x]=u[k]*ip[i+(1<< qubit)];
+			}
+			__syncthreads();
+			for(int q=0;q<1;q++)
+			{
+			d_op[i]=s1[q]+s2[q];
+			d_op[i+(1<< qubit)] =s1[q+1]+s2[q+1]	
+			}
+			
+			
+			//d_op[i] = (d_u[0] * d_ip[i]) + (d_u[1] * d_ip[i+(1<< qubit)]);
+			//d_op[i+(1<< qubit)] = (d_u[2] * d_ip[i]) + (d_u[3] * d_ip[i+(1<< qubit)]);
 			//printf("%f\n",d_ip[i]);
 			//printf("%f\n",d_ip[i+(1<<0)]);
 			
@@ -263,8 +283,40 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	
+	int num_frag = (count-6)/32;
+	float *inp;
+	float *onp;
+	int k=0;
+	int n=0;
 	dim3 grid(2,256);
+	
+	for(i=0;i<num_frag;i++)
+	{
+		for(int j=0;j<32;j++)
+		{
+			inp[j]=ip[k];
+			k++;
+		}
+	cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_ip,inp,32*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_op,onp,32*sizeof(float),cudaMemcpyHostToDevice);
+		
+		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op,qubit[0]);
+	cudaMemcpy(onp,d_op,32*sizeof(float),cudaMemcpyDeviceToHost);
+		for(int h=0;h<32;h++)
+		{
+			op[n]=onp[h]; 
+			n++;
+		}
+	}
+	
+	for(i=0;i<count-6;i++)
+	{
+		ip[i]=op[i];
+	}
+	
+	
+	/*dim3 grid(2,256);
 	
 	 cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
@@ -321,7 +373,7 @@ int main(int argc, char *argv[])
 	
 	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[5]);
 	
-	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);
+	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);*/
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
 	for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }

@@ -179,8 +179,8 @@ int main(int argc, char *argv[])
 	int d_qopr;
 	
 	cudaMalloc((void**)&d_u,4*sizeof(float));
-    	cudaMalloc((void**)&d_ip,(count-6)*sizeof(float));
-    	cudaMalloc((void**)&d_op,(count-6)*sizeof(float));
+    	cudaMalloc((void**)&d_ip,64*sizeof(float));
+    	cudaMalloc((void**)&d_op,64*sizeof(float));
 	
 	int block_size = 256;
 	 int grid_size = int(count/block_size);

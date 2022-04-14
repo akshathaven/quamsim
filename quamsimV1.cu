@@ -286,8 +286,9 @@ int main(int argc, char *argv[])
 	//cudaMemcpy(onp,d_op,32*sizeof(float),cudaMemcpyDeviceToHost);
 		for(int h=0;h<32;h++)
 		{
-			op[n]=inp[h]; 
-			n++;
+			printf("%d",inp[j]);
+			//op[n]=inp[h]; 
+			//n++;
 		}
 	}
 	
@@ -357,7 +358,7 @@ int main(int argc, char *argv[])
 	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);*/
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-	for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
+	//for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
     fclose(FP);
 }
 

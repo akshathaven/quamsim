@@ -286,8 +286,8 @@ int main(int argc, char *argv[])
 	int num_frag = (count-6)/64;
 	float *frag_ip;
 	float *frag_op;
-	frga_ip=(float*)malloc(sizeof(float)*64);
-	frga_op=(float*)malloc(sizeof(float)*64);
+	frag_ip=(float*)malloc(sizeof(float)*64);
+	frag_op=(float*)malloc(sizeof(float)*64);
 	int k=0;
 	int n=0;
 	dim3 grid(2,256);
@@ -300,11 +300,11 @@ int main(int argc, char *argv[])
 			k++;
 		}
 	cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_ip,inp,64*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_op,onp,64*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
 		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op,qubit[0]);
-	cudaMemcpy(onp,d_op,32*sizeof(float),cudaMemcpyDeviceToHost);
+	cudaMemcpy(frag_op,d_op,32*sizeof(float),cudaMemcpyDeviceToHost);
 		for(int h=0;h<64;h++)
 		{
 			op[n]=frag_op[h]; 

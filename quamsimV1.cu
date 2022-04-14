@@ -274,12 +274,12 @@ int main(int argc, char *argv[])
 		{
 			frag_ip[j]=ip[k];
 			k++;
-			printf("%f",frag_ip[j]);
+			//printf("%f",frag_ip[j]);
 		}
-		//for(int j=0;j<64;j++)
-		//{
-		//printf("%f",frag_ip[j]);
-		//}
+	for(int j=0;j<64;j++)
+		{
+		printf("%f\n",frag_ip[j]);
+		}
 	
 	}
 	

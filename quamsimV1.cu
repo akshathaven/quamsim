@@ -107,34 +107,15 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		index2 = mask ^i;
 		if(((i >>  qubit) & 1) == 0)
 		{
-			
-			__shared__ float s1[2];
-			__shared__ float s2[2];
-			
-			for(int j=0;j<3;j=j+2){
-				s1[threadIdx.x]=d_u[j]*d_ip[i];
-			}
-		__syncthreads();
-			for(int k=1;k<4;k=k+2)
-			{
-				s2[threadIdx.x]=d_u[k]*d_ip[i+(1<< qubit)];
-			}
-			__syncthreads();
-			//for(int q=0;q<1;q++)
-			//{
-			d_op[i]=s1[0]+s2[0];
-			d_op[i+(1<< qubit)] =s1[1]+s2[1];	
-			//}
-			
-			
-			//d_op[i] = (d_u[0] * d_ip[i]) + (d_u[1] * d_ip[i+(1<< qubit)]);
-			//d_op[i+(1<< qubit)] = (d_u[2] * d_ip[i]) + (d_u[3] * d_ip[i+(1<< qubit)]);
+			d_op[i] = (d_u[0] * d_ip[i]) + (d_u[1] * d_ip[i+(1<< qubit)]);
+			d_op[i+(1<< qubit)] = (d_u[2] * d_ip[i]) + (d_u[3] * d_ip[i+(1<< qubit)]);
 			//printf("%f\n",d_ip[i]);
 			//printf("%f\n",d_ip[i+(1<<0)]);
 			
 
 		}
 }
+
 
 
 

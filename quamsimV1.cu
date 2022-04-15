@@ -102,16 +102,16 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		int i= blockDim.x * blockIdx.x + threadIdx.x;
 		if(((i >>  qubit) & 1) == 0)
 		{
-			__shared__ float s1[2];
+			__shared__ float s1[1];
 			__shared__ float s2[1];
 			
 	
 				s1[threadIdx.x]=(d_u[0]*d_ip[i])+(d_u[1]*d_ip[i+(1<<qubit)]);
-				s1[threadIdx.x]=(d_u[2]*d_ip[i])+(d_u[3]*d_ip[i+(1<<qubit)]);
+				s2[threadIdx.x]=(d_u[2]*d_ip[i])+(d_u[3]*d_ip[i+(1<<qubit)]);
 			
 		__syncthreads();
 			d_op[i]=s1[0];
-			d_op[i+(1<< qubit)] = s1[1];
+			d_op[i+(1<< qubit)] = s2[0];
 		}
 }
 
@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
-		mat_mul<<<grid, 64>>>(d_u,d_ip,d_op,qubit[0]);
+		mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[0]);
 	cudaMemcpy(frag_op,d_op,32*sizeof(float),cudaMemcpyDeviceToHost);
 		for(int h=0;h<64;h++)
 		{

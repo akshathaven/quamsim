@@ -112,8 +112,8 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		__syncthreads();
 			d_op[i]=s1[0];
 			d_op[i+(1<< qubit)] = s2[0];
-			printf("%.3f\n",d_op[i]);
-			       printf("%.3f\n",d_op[i+(1<<qubit)]);
+			//printf("%.3f\n",d_op[i]);
+			       //printf("%.3f\n",d_op[i+(1<<qubit)]);
 		}
 }
 
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
 		}
 		for(int h=0;h<64;h++)
 		{
-			//printf("%3f\n",frag_op[h]);
+			printf("%3f\n",frag_op[h]);
 			
 		}
 	}

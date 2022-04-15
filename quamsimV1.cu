@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
 		}
 		for(int h=0;h<64;h++)
 		{
-			printf("%3f\n",frag_op[h]);
+			//printf("%3f\n",frag_op[h]);
 			
 		}
 	}
@@ -362,7 +362,7 @@ int main(int argc, char *argv[])
 	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);*/
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-	//for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
+	for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
     fclose(FP);
 }
 

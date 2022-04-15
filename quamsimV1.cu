@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
 		}
 		for(int h=0;h<64;h++)
 		{
-			printf("%3f",op[n]);
+			printf("%3f\n",op[n]);
 			
 		}
 	}

@@ -101,7 +101,7 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		
 		int i= blockDim.x * blockIdx.x + threadIdx.x;
 	        //printf("%d\n",((i>>qubit)&1));
-	__shared__ float s1[2];
+	__shared__ float s1[64];
 			__shared__ float s2[1];
 		//if(((i >>  qubit) & 1) == 0)
 		//{
@@ -111,8 +111,8 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 				s1[2*threadIdx.x]=(d_u[0]*d_ip[i])+(d_u[1]*d_ip[i+1]);
 				s1[2*threadIdx.x+1]=(d_u[2]*d_ip[i])+(d_u[3]*d_ip[i+1]);
 			__syncthreads();
-			//printf("%f\n",s1[2*threadIdx.x]);
-			//printf("%f\n",s1[2*threadIdx.x+1]);
+			printf("%f\n",s1[2*threadIdx.x]);
+			printf("%f\n",s1[2*threadIdx.x+1]);
 			
 		
 			d_op[i]=s1[2*threadIdx.x];
@@ -534,7 +534,7 @@ int main(int argc, char *argv[])
 	
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-for(int j=0;j<128;j++){printf("%.3f\n",disp[j]);    }
+//for(int j=0;j<128;j++){printf("%.3f\n",disp[j]);    }
 	//printf("Second half\n");
 	//for(int j=64;j<128;j++){printf("%.3f\n",disp[j]);    }
     fclose(FP);

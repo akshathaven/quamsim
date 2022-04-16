@@ -289,14 +289,14 @@ int main(int argc, char *argv[])
 			{
 				mod_ip[l]=ip[j];
 				mod_ip[l+1]=ip[j+(1<<qubit[0])];
-				printf("%.3f\n",mod_ip[l]);
-				printf("%.3f\n",mod_ip[l+1]);
+				//printf("%.3f\n",mod_ip[l]);
+				//printf("%.3f\n",mod_ip[l+1]);
 				l+=2;
 			
 			}
 			for(int d=0;d<64;d++){
 				frag_ip[d]=mod_ip[k];
-				//printf("%.3f\n",frag_ip[d]);
+				printf("%.3f\n",frag_ip[d]);
 				k++;
 			}
 		}

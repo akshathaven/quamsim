@@ -101,19 +101,19 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		
 		int i= blockDim.x * blockIdx.x + threadIdx.x;
 	        //printf("%d\n",((i>>qubit)&1));
-	__shared__ float s1[1];
+	__shared__ float s1[2];
 			__shared__ float s2[1];
 		if(((i >>  qubit) & 1) == 0)
 		{
 			
 			printf("%d\n",i);
 	
-				s1[threadIdx.x]=(d_u[0]*d_ip[i])+(d_u[1]*d_ip[i+(1<<qubit)]);
-				s2[threadIdx.x]=(d_u[2]*d_ip[i])+(d_u[3]*d_ip[i+(1<<qubit)]);
+				s1[2*threadIdx.x]=(d_u[0]*d_ip[i])+(d_u[1]*d_ip[i+(1<<qubit)]);
+				s1[2*threadIdx.x+1]=(d_u[2]*d_ip[i])+(d_u[3]*d_ip[i+(1<<qubit)]);
 			
 		__syncthreads();
 			d_op[i]=s1[0];
-			d_op[i+(1<< qubit)] = s2[0];
+			d_op[i+(1<< qubit)] = s1[1];
 			//printf("%.3f\n",d_op[i]);
 			       //printf("%.3f\n",d_op[i+(1<<qubit)]);
 		}
@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
 		}
 		for(int h=0;h<64;h++)
 		{
-			//printf("%3f\n",frag_op[h]);
+			printf("%3f\n",frag_op[h]);
 			
 		}
 	}

@@ -304,9 +304,9 @@ int main(int argc, char *argv[])
 	
 	
 	//2nd
-	int k=0;
-	int n=0;
-	dim3 grid(2,256);
+	k=0;
+	n=0;
+	//dim3 grid(2,256);
 	
 	for(i=0;i<num_frag;i++)
 	{

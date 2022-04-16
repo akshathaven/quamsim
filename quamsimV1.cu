@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
 			}
 			for(int d=0;d<64;d++){
 				frag_ip[d]=mod_ip[k];
-				printf("%.3f\n",mod_ip[d]);
+				printf("%.3f\n",mod_ip[k]);
 				k++;
 			}
 		}

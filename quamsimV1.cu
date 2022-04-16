@@ -100,6 +100,7 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 {
 		
 		int i= blockDim.x * blockIdx.x + threadIdx.x;
+	        printf("%d\n",((i>>qubit)&1));
 		if(((i >>  qubit) & 1) == 0)
 		{
 			__shared__ float s1[1];
@@ -293,7 +294,7 @@ int main(int argc, char *argv[])
 		}
 		for(int h=0;h<64;h++)
 		{
-			printf("%3f\n",frag_op[h]);
+			//printf("%3f\n",frag_op[h]);
 			
 		}
 	}

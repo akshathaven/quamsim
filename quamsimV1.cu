@@ -342,6 +342,7 @@ int main(int argc, char *argv[])
 			printf("%.3f\n",frag_op[h]);
 			
 		}
+		printf("%d\n",n);
 	}
 	
 	for(i=0;i<count-6;i++)

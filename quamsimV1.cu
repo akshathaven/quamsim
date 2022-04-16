@@ -333,7 +333,7 @@ int main(int argc, char *argv[])
 	}
 	
 	//3rd
-	k=0;
+	/*k=0;
 	n=0;
 	//dim3 grid(2,256);
 	
@@ -448,7 +448,7 @@ int main(int argc, char *argv[])
 	{
 		ip[i]=op[i];
 	}
-	
+	*/
 		/*cudaMemcpy(d_u,u2,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);

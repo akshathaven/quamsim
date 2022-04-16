@@ -290,9 +290,19 @@ int main(int argc, char *argv[])
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
 		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[0]);
-	cudaMemcpy(frag_ip,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
+	cudaMemcpy(frag_op,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
+		for(int h=0;h<64;h++)
+		{
+			op[n]=frag_op[h]; 
+			n++;
+		}
+	}
+	for(i=0;i<count-6;i++)
+	{
+		ip[i]=op[i];
+	}
 		
-		cudaMemcpy(d_u,u2,4*sizeof(float),cudaMemcpyHostToDevice);
+		/*cudaMemcpy(d_u,u2,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
@@ -331,8 +341,8 @@ int main(int argc, char *argv[])
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
 		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[5]);
-	cudaMemcpy(frag_op,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
-		for(int h=0;h<64;h++)
+	cudaMemcpy(frag_op,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);*/
+		/*for(int h=0;h<64;h++)
 		{
 			op[n]=frag_op[h]; 
 			n++;
@@ -342,8 +352,8 @@ int main(int argc, char *argv[])
 			printf("%.3f\n",frag_op[h]);
 			
 		}
-		printf("%d\n",n);
-	}
+		printf("%d\n",n);*/
+	//}
 	
 	for(i=0;i<count-6;i++)
 	{
@@ -351,67 +361,8 @@ int main(int argc, char *argv[])
 	}
 	
 	
-	/*dim3 grid(2,256);
-	
-	 cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	 
-	 
-	gettimeofday (&begin, NULL);
-          
-	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[0]);
-    gettimeofday (&end, NULL);
-	
-	cudaMemcpy(ip,d_op,(count-6)*sizeof(float),cudaMemcpyDeviceToHost);
-	//for(int j=0;j<count-6;j++){printf("%.3f\n",ip[j]);    }
-	cudaFree(d_u);
-	cudaFree(d_op);
-	cudaFree(d_ip);
-	
-	cudaMemcpy(d_u,u2,4*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	
-	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[1]);
-	
-	cudaMemcpy(ip,d_op,(count-6)*sizeof(float),cudaMemcpyDeviceToHost);
-	
-	cudaMemcpy(d_u,u3,4*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	
-	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[2]);
-	
-	cudaMemcpy(ip,d_op,(count-6)*sizeof(float),cudaMemcpyDeviceToHost);
-	
-	cudaMemcpy(d_u,u4,4*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	
-	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[3]);
-	
-	cudaMemcpy(ip,d_op,(count-6)*sizeof(float),cudaMemcpyDeviceToHost);
-	
-	cudaMemcpy(d_u,u5,4*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	
-	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[4]);
-	
-	cudaMemcpy(ip,d_op,(count-6)*sizeof(float),cudaMemcpyDeviceToHost);
-	
-	
-	cudaMemcpy(d_u,u6,4*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
-	
-	mat_mul<<<grid, 256>>>(d_u,d_ip,d_op,qubit[5]);
-	
-	cudaMemcpy(op,d_op,(count-1)*sizeof(float),cudaMemcpyDeviceToHost);*/
-	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-	//for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
+	for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
     fclose(FP);
 }
 

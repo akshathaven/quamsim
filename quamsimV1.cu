@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
 				mod_ip[l]=ip[j];
 				mod_ip[l+1]=ip[j+(1<<qubit[0])];
 				printf("%.3f",mod_ip[l]);
-				printf("%.3f",mod_ip[l+1);
+				printf("%.3f",mod_ip[l+1]);
 				l+=2;
 			
 			}

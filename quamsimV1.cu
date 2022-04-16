@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
 			
 			for(int d=0;d<64;d++){
 				frag_ip[d]=mod_ip[k];
-				//printf("%.3f\n",frag_ip[d]);
+				printf("%.3f\n",frag_ip[d]);
 				k++;
 			}
 		
@@ -534,8 +534,8 @@ int main(int argc, char *argv[])
 	
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-for(int j=0;j<64;j++){printf("%.3f\n",disp[j]);    }
-	printf("Second half\n");
-	for(int j=64;j<128;j++){printf("%.3f\n",disp[j]);    }
+for(int j=0;j<128;j++){printf("%.3f\n",disp[j]);    }
+	//printf("Second half\n");
+	//for(int j=64;j<128;j++){printf("%.3f\n",disp[j]);    }
     fclose(FP);
 }

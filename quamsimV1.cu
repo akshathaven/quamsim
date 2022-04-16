@@ -289,12 +289,14 @@ int main(int argc, char *argv[])
 			{
 				mod_ip[l]=ip[j];
 				mod_ip[l+1]=ip[j+(1<<qubit[0])];
+				printf("%.3f",mod_ip[l]);
+				printf("%.3f",mod_ip[l+1);
 				l+=2;
 			
 			}
 			for(int d=0;d<64;d++){
 				frag_ip[d]=mod_ip[k];
-				printf("%.3f\n",frag_ip[d]);
+				//printf("%.3f\n",frag_ip[d]);
 				k++;
 			}
 		}
@@ -302,7 +304,7 @@ int main(int argc, char *argv[])
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
-		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[0]);
+		//mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[0]);
 	cudaMemcpy(frag_op,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
 		for(int h=0;h<64;h++)
 		{

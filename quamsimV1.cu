@@ -509,7 +509,9 @@ int main(int argc, char *argv[])
 	
 	
 	//mat_mul1(u,ip,op,count-1,qubit_oper);
-	for(int j=0;j<count-6;j++){printf("%.3f\n",op[j]);    }
+	for(int j=0;j<64;j++){printf("%.3f\n",op[j]);    }
+	printf("Second half\n");
+	for(int j=64;j<128;j++){printf("%.3f\n",op[j]);    }
     fclose(FP);
 }
 

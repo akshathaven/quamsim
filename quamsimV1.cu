@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
-		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[0]);
+		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[1]);
 	cudaMemcpy(frag_op,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
 		for(int h=0;h<64;h++)
 		{
@@ -304,7 +304,7 @@ int main(int argc, char *argv[])
 	
 	
 	//2nd
-	k=0;
+	/*k=0;
 	n=0;
 	//dim3 grid(2,256);
 	
@@ -330,7 +330,7 @@ int main(int argc, char *argv[])
 	for(i=0;i<count-6;i++)
 	{
 		ip[i]=op[i];
-	}
+	}*/
 	
 	//3rd
 	/*k=0;

@@ -297,6 +297,40 @@ int main(int argc, char *argv[])
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
 		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[1]);
+	cudaMemcpy(frag_ip,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
+		
+		//3rd
+		cudaMemcpy(d_u,u3,4*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
+		
+		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[2]);
+	cudaMemcpy(frag_ip,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
+		
+		//4th
+		cudaMemcpy(d_u,u4,4*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
+		
+		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[3]);
+	cudaMemcpy(frag_ip,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
+		
+		//5th
+		
+		cudaMemcpy(d_u,u5,4*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
+		
+		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[4]);
+	cudaMemcpy(frag_ip,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
+		
+		//6th
+		
+		cudaMemcpy(d_u,u6,4*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
+	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
+		
+		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[5]);
 	cudaMemcpy(frag_op,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
 		for(int h=0;h<64;h++)
 		{

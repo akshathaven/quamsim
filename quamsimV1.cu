@@ -285,14 +285,17 @@ int main(int argc, char *argv[])
 	{ l=0;
 		for(int j=0;j<count-6;j++)
 		{
-			if(((j>>qubit[0])&1)==0)){
+			if(((j>>qubit[0])&1)==0)
+			{
 				mod_ip[l]=ip[j];
 				mod_ip[l+1]=ip[j+(1<<qubit[0])];
 				l+=2;
 			
 			}
-			for(int d=0;d<64;d++){frag_ip[d]=mod_ip[k];
-		k++;}
+			for(int d=0;d<64;d++){
+				frag_ip[d]=mod_ip[k];
+				k++;
+			}
 		}
 	cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);

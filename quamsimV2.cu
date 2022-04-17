@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
 	cudaMemcpy(ip,d_op,(count-6)*sizeof(float),cudaMemcpyDeviceToHost);
 	
 	//6th
-	cudaMemcpy(d_u,u3,4*sizeof(float),cudaMemcpyHostToDevice);
+	cudaMemcpy(d_u,u6,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
 		

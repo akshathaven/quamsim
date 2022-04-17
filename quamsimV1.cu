@@ -106,7 +106,7 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 		//if(((i >>  qubit) & 1) == 0)
 		//{
 			
-			
+			for(i=0;i<64;i+=2){
 	
 				s1[2*threadIdx.x]=(d_u[0]*d_ip[i])+(d_u[1]*d_ip[i+1]);
 				s1[2*threadIdx.x+1]=(d_u[2]*d_ip[i])+(d_u[3]*d_ip[i+1]);
@@ -117,8 +117,8 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 			
 		
 			d_op[i]=s1[2*threadIdx.x];
-			d_op[i+1] = s1[2*threadIdx.x+1];
-	i=i+2;
+			d_op[i+1] = s1[2*threadIdx.x+1];}
+	
 			//printf("%.3f\n",d_op[i]);
 			       //printf("%.3f\n",d_op[i+(1<<qubit)]);
 		//}

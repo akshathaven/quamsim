@@ -95,8 +95,8 @@ int main(int argc, char *argv[])
 	int d_qopr;
 	
 	cudaMalloc((void**)&d_u,4*sizeof(float));
-    	cudaMalloc((void**)&d_ip,64*sizeof(float));
-    	cudaMalloc((void**)&d_op,64*sizeof(float));
+    	cudaMalloc((void**)&d_ip,(count-6)*sizeof(float));
+    	cudaMalloc((void**)&d_op,(count-6)*sizeof(float));
 	
 	int block_size = 256;
 	 int grid_size = int(count/block_size);
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
 	 cudaMemcpy(d_ip,ip,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,op,(count-6)*sizeof(float),cudaMemcpyHostToDevice);
 		
-		mat_mul<<<num_frag, th_block>>>(d_u,d_ip,d_op, pow(2,qubit[2]));
+		mat_mul<<<num_frag, th_block>>>(d_u,d_ip,d_op, pow(2,qubit[5]));
 	cudaMemcpy(op,d_op,(count-6)*sizeof(float),cudaMemcpyDeviceToHost);
 	
 	

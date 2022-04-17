@@ -115,8 +115,8 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 			//printf("%.3f\n",d_ip[i+1]);
 	
 			__syncthreads();
-			printf("%f\n",d_ip[i]);
-			printf("%f\n",d_ip[i+1]);
+			//printf("%f\n",d_ip[i]);
+			//printf("%f\n",d_ip[i+1]);
 			
 		
 			d_op[i]=s1[2*threadIdx.x];
@@ -303,7 +303,7 @@ int main(int argc, char *argv[])
 			
 			for(int d=0;d<64;d++){
 				frag_ip[d]=mod_ip[k];
-				//printf("%.3f\n",frag_ip[d]);
+				printf("%.3f\n",frag_ip[d]);
 				k++;
 			}
 		

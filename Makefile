@@ -29,6 +29,6 @@ run: build
 clean:
 	rm -f quamsimV1 *.o
 	rm -f quamsimV2 *.o
-        rm -f quamsimV3 *.o
+	rm -f quamsimV3 *.o
 
 	

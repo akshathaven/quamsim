@@ -42,7 +42,7 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 
 	
 	i=i+segment*qubit;
-	 s[2*threadIdx.x]=d_ip[2*i]; 
+	 s[2*threadIdx.x]=d_ip[i]; 
 	  s[2*threadIdx.x+1]=d_ip[i+qubit];
 	
 	 

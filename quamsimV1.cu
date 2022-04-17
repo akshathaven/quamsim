@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
 	
 	dim3 grid(1,1);
 	
-	for(i=0;i<1;i++)
+	for(i=0;i<num_frag;i++)
 	{ l=0;
 		for(int j=0;j<count-6;j++)
 		{
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
 				printf("%.3f\n",frag_ip[d]);
 				k++;
 			}
-	}
+	
 		
 	cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
@@ -253,9 +253,10 @@ int main(int argc, char *argv[])
 		for(int h=0;h<64;h++)
 		{
 			op[n]=frag_op[h]; 
-			//printf("%.3f\n",frag_op[h]);
+			printf("%.3f\n",frag_op[h]);
 			n++;
 		}
+	 }
 	
 	int s=0;
 	float *disp;

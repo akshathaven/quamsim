@@ -110,7 +110,7 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 	
 				s1[2*threadIdx.x]=(d_u[0]*d_ip[i])+(d_u[1]*d_ip[i+1]);
 				s1[2*threadIdx.x+1]=(d_u[2]*d_ip[i])+(d_u[3]*d_ip[i+1]);
-			printf("%d",i);
+			printf("%d\n",i);
 	
 			__syncthreads();
 			//printf("%f\n",s1[2*threadIdx.x]);

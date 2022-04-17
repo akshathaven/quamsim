@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
-		mat_mul<<<grid, 32>>>(d_u,d_ip,d_op, qubit[1]);
+		mat_mul<<<grid, 2>>>(d_u,d_ip,d_op, qubit[1]);
 	cudaMemcpy(frag_op,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
 		for(int h=0;h<64;h++)
 		{

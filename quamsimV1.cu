@@ -306,6 +306,7 @@ int main(int argc, char *argv[])
 				printf("%.3f\n",frag_ip[d]);
 				k++;
 			}
+	}
 		
 	cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
@@ -319,7 +320,7 @@ int main(int argc, char *argv[])
 			//printf("%.3f\n",frag_op[h]);
 			n++;
 		}
-	}
+	
 	int s=0;
 	float *disp;
 	disp=(float*)malloc(sizeof(float)*(count-6));

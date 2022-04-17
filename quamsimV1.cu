@@ -115,7 +115,7 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 			//printf("%.3f\n",d_ip[i+1]);
 	
 			__syncthreads();
-			printf("%f\n",d_ip[i]);
+			printf("%d\n",i);
 			//printf("%f\n",d_ip[i+1]);
 			
 		

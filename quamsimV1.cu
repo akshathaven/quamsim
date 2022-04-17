@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
 		for(int h=0;h<64;h++)
 		{
 			op[n]=frag_op[h]; 
-			printf("%.3f\n",frag_op[h]);
+			//printf("%.3f\n",frag_op[h]);
 			n++;
 		}
 	 }
@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
 		}
 		
 	}
-	
+	for(i=0;i<count-6;i++){printf("%.3f",disp[i]);}
 	
 	
     fclose(FP);

@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
 		}
 		
 	}
-	for(i=0;i<count-6;i++){printf("%.3f",disp[i]);}
+	for(i=0;i<count-6;i++){printf("%.3f\n",disp[i]);}
 	
 	
     fclose(FP);

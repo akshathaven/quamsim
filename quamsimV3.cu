@@ -44,7 +44,7 @@ int segment2=j/qubit;
 
 j=j+segment2*qubit;
 	
-	i=i+segment*qubit;
+	i=i+segment1*qubit;
 	 s[4*threadIdx.x]=d_ip[i]; 
 	  s[4*threadIdx.x+1]=d_ip[i+qubit];
 		s[4*threadIdx.x+2]=d_ip[j]; 

@@ -42,14 +42,14 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 
 	
 	i=i+segment*qubit;
-	 s[i_four]=d_ip[i]; 
-	  s[i_four+1]=d_ip[i+qubit];
+	 s[2*threadIdx.x]=d_ip[i]; 
+	  s[2*threadIdx.x+1]=d_ip[i+qubit];
 	
 	 
    	  __syncthreads();
 
-	  d_op[i]=(d_u[0]*s[i_four]) + (d_u[1]*s[i_four+1]);                 //first matrix (first half)
-	  d_op[i+qubit]=(d_u[2]*s[i_four])+(d_u[3]*s[i_four+1])  ; 
+	  d_op[i]=(d_u[0]*s[2*threadIdx.x]) + (d_u[1]*s[2*threadIdx.x+1]);                 
+	  d_op[i+qubit]=(d_u[2]*s[2*threadIdx.x])+(d_u[3]*s[2*threadIdx.x+1])  ; 
 	 
 }
 

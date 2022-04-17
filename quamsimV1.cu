@@ -29,55 +29,7 @@ float (*mat2)[1];
 float (*res)[1];
 struct timeval begin, end;
 
-void mat_mul(float **col1,float **vector_array, int size,int qubit_oper)
-{
-    //printf("why");
 
-    int arr_bool[size];
-	for(int i=0;i<size;i++){
-		arr_bool[i]=0;
-	}
-
-	for(int j=0;j<size-1;j++)
-	{
-		float res_array[2][1];
-		memset(res_array, 0, sizeof(res_array));
-		if (arr_bool[j]==1){
-			//printf("%d",i);
-		}
-		else
-		{
-			//float **vec_mat;
-			float col2[2][1];
-			mask = 1<<qubit_oper;
-			index1 = j;
-			index2 = mask ^j;
-			col2[0][0]=vector_array[index1][0];
-			col2[1][0]=vector_array[index2][0];
-			mat2=col2;
-			arr_bool[index1]=1;
-			arr_bool[index2]=1;
-            for (int i = 0; i < 2; ++i) {
-                for (int j = 0; j < 1; ++j) {
-                    for (int k = 0; k < 2; ++k) {
-                    res_array[i][j] += col1[i][k] * mat2[k][j];
-                }
-      }
-  }
-  res=res_array;
-    vector_array[index1][0]=res[0][0];
-    vector_array[index2][0]=res[1][0];
-
-		}
-	}
-
-	for (int i = 0; i < size; ++i) {
-      for (int j = 0; j < 1; ++j) {
-         printf("%.3f  ", vector_array[i][j]);
-         printf("\n");
-      }
-  }
-}
 
 
 __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
@@ -268,7 +220,7 @@ int main(int argc, char *argv[])
 	int k=0;
 	int n=0;
 	
-	dim3 grid(2,256);
+	dim3 grid(1,1);
 	
 	for(i=0;i<1;i++)
 	{ l=0;

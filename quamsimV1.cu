@@ -1,277 +1,359 @@
+//Part A
+/**
+ * Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
+ *
+ * Please refer to the NVIDIA end user license agreement (EULA) associated
+ * with this source code for terms and conditions that govern your use of
+ * this software. Any use, reproduction, disclosure, or distribution of
+ * this software and related documentation outside the terms of the EULA
+ * is strictly prohibited.
+ *
+ */
+
+/**
+ * Vector addition: C = A + B.
+ *
+ * This sample is a very basic sample that implements element by element
+ * vector addition. It is the same as the sample illustrating Chapter 2
+ * of the programming guide with some additions like error checking.
+ */
+
 #include <stdio.h>
-//#include <conio.h>
-#include <stdlib.h>
 #include <math.h>
-#include <stdbool.h>
-#include <string.h>
-#include <cuda.h>
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
-#include <cmath>
-#include <time.h>
-#include <sys/time.h>
-#include <unistd.h>
+// For the CUDA runtime routines (prefixed with "cuda_")
+#include <cuda_runtime.h>
 
-FILE *FP;    // to store trace file
-char *input_file;
-int i;
-
-float num1,num2;
-//float col1[2][2];
-//float *col1[2];
-float col2[4];
-int index1,index2;
-int qubit_circuit;
-int qubit_oper;
-int mask;
-//float (*mat1)[2];
-float (*mat2)[1];
-float (*res)[1];
-struct timeval begin, end;
-
-
-
-
-__global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
+/**
+ * CUDA Kernel Device code
+ *
+ * Computes the vector addition of A and B into C. The 3 vectors have the same
+ * number of elements numElements.
+ */
+__global__ void
+vectorAdd(const float *A, const float *U, float *O, int numElements,int q,int lognumElements)
 {
-		
-		int i= blockDim.x * blockIdx.x + threadIdx.x;
-	        //printf("%d\n",((i>>qubit)&1));
-	//printf("%.3f\n",d_ip[i]);
-	__shared__ float s1[2];
-			__shared__ float s2[1];
-		if(((i >>  0) & 1) == 0)
-		{
-			
-			//for(i=0;i<64;i+=2){
+	  __shared__ float s[64];
+
+	int i = blockDim.x * blockIdx.x + threadIdx.x;
+	int segment = i/q;
+	int i_four=2*threadIdx.x;
+
 	
-				s1[2*threadIdx.x]=(d_u[0]*d_ip[i])+(d_u[1]*d_ip[i+1]);
-				s1[2*threadIdx.x+1]=(d_u[2]*d_ip[i])+(d_u[3]*d_ip[i+1]);
-			
-			//printf("%.3f\n",d_ip[i+1]);
+	i=i+segment*q;
+	 s[i_four]=A[i]; 
+	  s[i_four+1]=A[i+q];
 	
-			__syncthreads();
-			printf("%d\n",i);
-			//printf("%f\n",d_ip[i+1]);
-			
-		
-			d_op[i]=s1[2*threadIdx.x];
-			d_op[i+1] = s1[2*threadIdx.x+1];
-	
-			//printf("%.3f\n",d_op[i]);
-			       //printf("%.3f\n",d_op[i+(1<<qubit)]);
-		}
+	 
+   	  __syncthreads();
+
+	  O[i]=(U[0]*s[i_four]) + (U[1]*s[i_four+1]);                 //first matrix (first half)
+	  O[i+q]=(U[2]*s[i_four])+(U[3]*s[i_four+1])  ; 
+	 
 }
 
 
-
-int main(int argc, char *argv[])
+/**
+ * Host main routine
+ */
+int
+main(int argc, char* argv[])
 {
-   // //qubit_circuit = argv[0]; //qubit circuit
-	//printf("%d\n",qubit_circuit);
-    //scanf("%d",&qubit_circuit);
-    //scanf("%d",&qubit_oper);
-    //qubit_oper      = argv[1]; //qubit operation
-    input_file = argv[1]; // "input_for_qc7_q0_q2_q3_q4_q5_q6.txt";
-    //input_1=argv[0];
+    char *input_file;
+	input_file= argv[1];
+	// Error code to check return values for CUDA calls
+    cudaError_t err = cudaSuccess;
+  
+    int temp_numElements=100000000;
+    int num_qgate_elements=4;
+    size_t size = temp_numElements * sizeof(float);
+    size_t size_gate = num_qgate_elements * sizeof(float);
+    
+
+
+	float *temp_array=(float*)malloc(size);
+    float *h_U1 = (float *)malloc(size_gate);
+	float *h_U2 = (float *)malloc(size_gate);
+	float *h_U3 = (float *)malloc(size_gate);
+	float *h_U4 = (float *)malloc(size_gate);
+	float *h_U5 = (float *)malloc(size_gate);
+	float *h_U6 = (float *)malloc(size_gate);
+
+    
+    FILE *FP;
+    float temp1;
+   
     FP = fopen(input_file, "r");
-    if (FP == NULL)
+    fscanf(FP,"%f %f %f %f",&h_U1[0],&h_U1[1],&h_U1[2],&h_U1[3]);
+	fscanf(FP,"%f %f %f %f",&h_U2[0],&h_U2[1],&h_U2[2],&h_U2[3]);
+	fscanf(FP,"%f %f %f %f",&h_U3[0],&h_U3[1],&h_U3[2],&h_U3[3]);
+	fscanf(FP,"%f %f %f %f",&h_U4[0],&h_U4[1],&h_U4[2],&h_U4[3]);
+	fscanf(FP,"%f %f %f %f",&h_U5[0],&h_U5[1],&h_U5[2],&h_U5[3]);
+	fscanf(FP,"%f %f %f %f",&h_U6[0],&h_U6[1],&h_U6[2],&h_U6[3]);
+
+
+    int j=0;
+    while(fscanf(FP,"%f ",&temp1)!= EOF)
     {
-        printf("Unable to open file %s\n", input_file);
-        return 1;
+
+	        temp_array[j]=temp1;
+		    j++;
     }
-	int coun=0;
-    int p=0;
 
-
-
-	int mask;
-	//int size = pow(2,qubit_circuit);
-
-    int count=0;
-    //int p=0;
-	while(fscanf(FP, "%f", &num1) != EOF){
-    if(p>23)
-        {
-        count++;}
-    p++;
-	}
-	//printf("%d,",p);
-	//printf("%d",count);
-	float **vector_array;
-	float *ip;
-	float *op;
-	
-	float *d_u,*d_ip,*d_op;
-	int d_qopr;
-	
-	cudaMalloc((void**)&d_u,4*sizeof(float));
-    	cudaMalloc((void**)&d_ip,64*sizeof(float));
-    	cudaMalloc((void**)&d_op,64*sizeof(float));
-	
-	int block_size = 256;
-	 int grid_size = int(count/block_size);
-	//dim3 grid(grid_size,grid_size);
-	//dim3 threads(block_size, block_size);
+	int numElements=j-6;
+    size = numElements * sizeof(float);
+ 
+	   // Allocate the host input vector A
+    float *h_A = (float *)malloc(size);
+	int l;
+    for(l=0;l<(j-6);l++)
+	    {h_A[l]=temp_array[l];}
 	
 	
-	vector_array=(float**) malloc(sizeof(float*)*count-1);
-	ip= (float*) malloc(sizeof(float)*count-6);
-	op=(float*) malloc(sizeof(float)*count-6);
-	float *mod_ip;
-	mod_ip=(float*) malloc(sizeof(float)*count-6);
-	float **col1;
-	float *u1,*u2,*u3,*u4,*u5,*u6;
-	int *qubit;
-	col1=(float**)malloc(sizeof(float*)*2);
-	u1=(float*)malloc(sizeof(float)*4);
-	u2=(float*)malloc(sizeof(float)*4);
-	u3=(float*)malloc(sizeof(float)*4);
-	u4=(float*)malloc(sizeof(float)*4);
-	u5=(float*)malloc(sizeof(float)*4);
-	u6=(float*)malloc(sizeof(float)*4);
-	qubit=(int*)malloc(sizeof(int)*6);
-	int a=0;
-	int b=0;
-	int c=0;
-	int d=0;
-	int e=0;
-	int f=0;
-	int g=0;
+    int q1=temp_array[j-6];
+    int qbit1=pow(2,q1);   //qbit
 	
-	for(i=0;i<2;i++){
-        col1[i]=(float*) malloc(sizeof(float)*2);
-	}
-    //printf("%d,",size);
-    int test_size=count-6;
-	for(i=0;i<count-1;i++){
-        vector_array[i]=(float*) malloc(sizeof(float)*1);
-        
-	}
-	op=(float*)malloc(sizeof(float)*test_size);
-	ip=(float*)malloc(sizeof(float)*test_size);
-	fseek(FP,0,SEEK_SET);
-    //open trace file to read
-	i=0;
-	int l=0;
+	
+	int q2=temp_array[j-5];
+    int qbit2=pow(2,q2);   //qbit
+
+	
+	int q3=temp_array[j-4];
+    int qbit3=pow(2,q3);   //qbit
+
+	
+	int q4=temp_array[j-3];
+    int qbit4=pow(2,q4);   //qbit
+
+	
+	int q5=temp_array[j-2];
+    int qbit5=pow(2,q5);   //qbit
+	
+	
+	int q6=temp_array[j-1];
+    int qbit6=pow(2,q6);   //qbit
 
 
-	while(fscanf(FP, "%f", &num1) != EOF)
+    free(temp_array);
+   
+	
+    float *h_O=(float *)malloc(size);
+	float *h_O1=(float *)malloc(size);
+	float *h_O2=(float *)malloc(size);
+	float *h_O3=(float *)malloc(size);
+	float *h_O4=(float *)malloc(size);
+	float *h_O5=(float *)malloc(size);
+
+    // Verify that allocations succeeded
+  if (h_A == NULL || h_U1 == NULL || h_O == NULL)
     {
-		if(i<4){
-		col2[i]=num1;
-		u1[i]=num1;
-		//printf("%f",col2[i]);
-		//printf("\n");
-		}
-		if(i>3 && i<8){
-		u2[a]=num1;
-		a++;
-		}
-		if(i>7 && i<12){
-		u3[b]=num1;
-		b++;
-		}
-		if(i>11 && i<16){
-		u4[c]=num1;
-		c++;
-		}
-		if(i>15 && i<20){
-		u5[d]=num1;
-		d++;
-		}
-		if(i>19 && i<24){
-		u6[e]=num1;
-		e++;
-		}
-		//printf("%f",col1[i][c]);
-		//printf("\n");
-		for(int a=0;a<2;a++){
-		    for(int b=0;b<2;b++){
-		        col1[a][b]=col2[(a*2)+b];		   }
-		}
-		
+        fprintf(stderr, "Failed to allocate host vectors!\n");
+        exit(EXIT_FAILURE);
+    }
 
-        
+   
 
-		if(i>23 && i<(p-6)){
+    // Allocate the device input vector A
+    float *d_A = NULL;
+    err = cudaMalloc((void **)&d_A, size);
 
-		    vector_array[l][0]=num1;
-		    ip[l]=num1;
-		    l++;
-		    
-		}
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to allocate device vector A (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
 
-        i++;
-        if(i>p-6){
-            qubit_oper =  num1;
-		qubit[g]=num1;
-		g++;
-            
+    // Allocate the device input vector B
+    float *d_U1 = NULL;
+    err = cudaMalloc((void **)&d_U1, size_gate);
+	
+	float *d_U2 = NULL;
+    err = cudaMalloc((void **)&d_U2, size_gate);
+	
+	 float *d_U3 = NULL;
+    err = cudaMalloc((void **)&d_U3, size_gate);
+	
+	float *d_U4 = NULL;
+    err = cudaMalloc((void **)&d_U4, size_gate);
+	
+	float *d_U5 = NULL;
+    err = cudaMalloc((void **)&d_U5, size_gate);
+	
+	float *d_U6 = NULL;
+    err = cudaMalloc((void **)&d_U6, size_gate);
 
-		}
-	}
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to allocate device vector U (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+    // Allocate the device output vector C
+    float *d_O = NULL;
+    err = cudaMalloc((void **)&d_O, size);
 	
-	int num_frag = (count-6)/64;
-	float *frag_ip;
-	float *frag_op;
-	frag_ip=(float*)malloc(sizeof(float)*64);
-	frag_op=(float*)malloc(sizeof(float)*64);
-	int k=0;
-	int n=0;
+    float *d_O1 = NULL;
+    err = cudaMalloc((void **)&d_O1, size);
 	
-	dim3 grid(1,1);
+    float *d_O2 = NULL;
+    err = cudaMalloc((void **)&d_O2, size);
 	
-	for(i=0;i<num_frag;i++)
-	{ l=0;
-		for(int j=0;j<count-6;j++)
-		{
-			if(((j>>qubit[0])&1)==0)
-			{
-				mod_ip[l]=ip[j];
-				mod_ip[l+1]=ip[j+(1<<qubit[0])];
-				//printf("%.3f\n",mod_ip[l]);
-				//printf("%.3f\n",mod_ip[l+1]);
-				l+=2;
-			
-			}
-		}
-			
-			for(int d=0;d<64;d++){
-				frag_ip[d]=mod_ip[k];
-				//printf("%.3f\n",frag_ip[d]);
-				k++;
-			}
+    float *d_O3 = NULL;
+    err = cudaMalloc((void **)&d_O3, size);
 	
-		
-	cudaMemcpy(d_u,u1,4*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
-	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
-		
-		mat_mul<<<grid, 64>>>(d_u,d_ip,d_op, qubit[0]);
-	cudaMemcpy(frag_op,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
-		for(int h=0;h<64;h++)
-		{
-			op[n]=frag_op[h]; 
-			//printf("%.3f\n",frag_op[h]);
-			n++;
-		}
-	 }
+    float *d_O4 = NULL;
+    err = cudaMalloc((void **)&d_O4, size);
 	
-	int s=0;
-	float *disp;
-	disp=(float*)malloc(sizeof(float)*(count-6));
-	for(i=0;i<count-6;i++)
-	{
-		if(((i>>qubit[0])&1)==0){
-		disp[i]=op[s];
-			disp[i+(1<<qubit[0])]=op[s+1];
-			s+=2;
-		}
-		
-	}
-	for(i=0;i<count-6;i++){printf("%.3f\n",disp[i]);}
+    float *d_O5 = NULL;
+    err = cudaMalloc((void **)&d_O5, size);
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to allocate device vector O (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+    // Copy the host input vectors A and B in host memory to the device input vectors in
+    // device memory
+   // printf("Copy input data from the host memory to the CUDA device\n");
+    err = cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to copy vector A from host to device (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+    err = cudaMemcpy(d_U1, h_U1, size_gate, cudaMemcpyHostToDevice);
+	err = cudaMemcpy(d_U2, h_U2, size_gate, cudaMemcpyHostToDevice);
+	err = cudaMemcpy(d_U3, h_U3, size_gate, cudaMemcpyHostToDevice);
+	err = cudaMemcpy(d_U4, h_U4, size_gate, cudaMemcpyHostToDevice);
+	err = cudaMemcpy(d_U5, h_U5, size_gate, cudaMemcpyHostToDevice);
+	err = cudaMemcpy(d_U6, h_U6, size_gate, cudaMemcpyHostToDevice);
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to copy vector U from host to device (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+int lognumElements= (int)(ceil(log(numElements) / log(2)));
+    // Launch the Vector Add CUDA Kernel
+    int threadsPerBlock=32;
+    int blocksPerGrid=(numElements/64) ;
+	//int blocksPerGrid=(numElements + threadsPerBlock - 1) / threadsPerBlock;
 	
+    //printf("CUDA kernel launch with %d blocks of %d threads\n", blocksPerGrid, threadsPerBlock);
+
+    vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_U1, d_O, numElements,qbit1,lognumElements);
+
+	vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_O, d_U2, d_O1, numElements,qbit2,lognumElements);
 	
-    fclose(FP);
+	vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_O1, d_U3, d_O2, numElements,qbit3,lognumElements);
+
+	vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_O2, d_U4, d_O3, numElements,qbit4,lognumElements);
+	
+	vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_O3, d_U5, d_O4, numElements,qbit5,lognumElements);
+
+	vectorAdd<<<blocksPerGrid, threadsPerBlock>>>(d_O4, d_U6, d_O5, numElements,qbit6,lognumElements);
+
+	
+    err = cudaGetLastError();
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to launch vectorAdd kernel (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+    // Copy the device result vector in device memory to the host result vector
+    // in host memory.
+    //printf("Copy output data from the CUDA device to the host memory\n");
+    err = cudaMemcpy(h_O , d_O,  size, cudaMemcpyDeviceToHost);
+	err = cudaMemcpy(h_O1, d_O1, size, cudaMemcpyDeviceToHost);
+	err = cudaMemcpy(h_O2, d_O2, size, cudaMemcpyDeviceToHost);
+	err = cudaMemcpy(h_O3, d_O3, size, cudaMemcpyDeviceToHost);
+	err = cudaMemcpy(h_O4, d_O4, size, cudaMemcpyDeviceToHost);
+	err = cudaMemcpy(h_O5, d_O5, size, cudaMemcpyDeviceToHost);
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to copy vector C from device to host (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+   int h;
+   //printf("\n the output file is:");
+   
+   for(h=0;h<j-6;h++)
+   {
+	  printf("%0.3f",h_O5[h]);
+	 printf("\n");
+   }	 
+
+    // Free device global memory
+    err = cudaFree(d_A);
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to free device vector A (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+    err = cudaFree(d_U1);
+	err = cudaFree(d_U2);
+	err = cudaFree(d_U3);
+	err = cudaFree(d_U4);
+	err = cudaFree(d_U5);
+	err = cudaFree(d_U6);
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to free device vector U (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+    err = cudaFree(d_O);
+	err = cudaFree(d_O1);
+	err = cudaFree(d_O2);
+	err = cudaFree(d_O3);
+	err = cudaFree(d_O4);
+	err = cudaFree(d_O5);
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to free device vector O (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+    // Free host memory
+    free(h_A);
+    free(h_U1);
+	free(h_U2);
+	free(h_U3);
+	free(h_U4);
+	free(h_U5);
+	free(h_U6);
+	
+    free(h_O);
+	free(h_O1);
+	free(h_O2);
+	free(h_O3);
+	free(h_O4);
+	free(h_O5);
+
+    // Reset the device and exit
+    // cudaDeviceReset causes the driver to clean up all state. While
+    // not mandatory in normal operation, it is good practice.  It is also
+    // needed to ensure correct operation when the application is being
+    // profiled. Calling cudaDeviceReset causes all profile data to be
+    // flushed before the application exits
+    err = cudaDeviceReset();
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to deinitialize the device! error=%s\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+   // printf("Done\n");
+    return 0;
 }

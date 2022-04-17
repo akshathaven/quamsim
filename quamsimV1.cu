@@ -38,12 +38,12 @@ __global__ void mat_mul(float *d_u, float *d_ip,float *d_op,int qubit)
 
 	int i = blockDim.x * blockIdx.x + threadIdx.x;
 	int segment = i/qubit;
-	int i_four=2*threadIdx.x;
+	//int i_four=2*threadIdx.x;
 
 	
 	i=i+segment*qubit;
-	 s[2*threadIdx.x]=d_ip[2i]; 
-	  s[2*threadIdx.x+1]=d_ip[2i+qubit];
+	 s[2*threadIdx.x]=d_ip[2*i]; 
+	  s[2*threadIdx.x+1]=d_ip[i+qubit];
 	
 	 
    	  __syncthreads();

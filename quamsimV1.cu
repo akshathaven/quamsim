@@ -226,10 +226,10 @@ int main(int argc, char *argv[])
 	{ l=0;
 		for(int j=0;j<count-6;j++)
 		{
-			if(((j>>qubit[1])&1)==0)
+			if(((j>>qubit[2])&1)==0)
 			{
 				mod_ip[l]=ip[j];
-				mod_ip[l+1]=ip[j+(1<<qubit[1])];
+				mod_ip[l+1]=ip[j+(1<<qubit[2])];
 				//printf("%.3f\n",mod_ip[l]);
 				//printf("%.3f\n",mod_ip[l+1]);
 				l+=2;
@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 	 cudaMemcpy(d_ip,frag_ip,64*sizeof(float),cudaMemcpyHostToDevice);
 	 cudaMemcpy(d_op,frag_op,64*sizeof(float),cudaMemcpyHostToDevice);
 		
-		mat_mul<<<grid, 64>>>(d_u,d_ip,d_op, qubit[1]);
+		mat_mul<<<grid, 64>>>(d_u,d_ip,d_op, qubit[2]);
 	cudaMemcpy(frag_op,d_op,64*sizeof(float),cudaMemcpyDeviceToHost);
 		for(int h=0;h<64;h++)
 		{
@@ -263,9 +263,9 @@ int main(int argc, char *argv[])
 	disp=(float*)malloc(sizeof(float)*(count-6));
 	for(i=0;i<count-6;i++)
 	{
-		if(((i>>qubit[1])&1)==0){
+		if(((i>>qubit[2])&1)==0){
 		disp[i]=op[s];
-			disp[i+(1<<qubit[1])]=op[s+1];
+			disp[i+(1<<qubit[2])]=op[s+1];
 			s+=2;
 		}
 		
